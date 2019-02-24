@@ -81,6 +81,7 @@ set (COMMON_FILES
     src/ZXContainerAlgorithms.h
     src/ZXStrConvWorkaround.h
     src/ZXTestSupport.h
+    src/pybind.cpp
 )
 if (ENABLE_DECODERS)
     set (COMMON_FILES ${COMMON_FILES}
@@ -445,8 +446,11 @@ source_group (Sources\\qrcode FILES ${QRCODE_FILES})
 source_group (Sources\\textcodec FILES ${TEXT_CODEC_FILES})
 
 find_package (Threads)
+find_package(PythonLibs REQUIRED)
+find_package(pybind11 REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 
-add_library (ZXingCore
+pybind11_add_module(ZXingCore SHARED
     ${COMMON_FILES}
     ${AZTEC_FILES}
     ${DATAMATRIX_FILES}
@@ -480,7 +484,7 @@ elseif (APPLE)
     )
 endif()
 
-target_link_libraries (ZXingCore PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (ZXingCore PUBLIC ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
 
 add_library(ZXing::Core ALIAS ZXingCore)
 set_target_properties(ZXingCore PROPERTIES EXPORT_NAME Core)
