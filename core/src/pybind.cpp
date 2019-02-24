@@ -253,11 +253,6 @@ PYBIND11_MODULE(ZXingCore, m) {
 		.def(py::init<std::shared_ptr<ZXing::GenericLuminanceSource>>())
 		.def(py::init<std::shared_ptr<ZXing::GenericLuminanceSource>, bool>())
 		.def("newInstance", &ZXing::HybridBinarizer::newInstance);
-		// .def("newInstance", [](ZXing::HybridBinarizer &self, std::shared_ptr<ZXing::GenericLuminanceSource> &source) {
-		// 	auto ls = (std::shared_ptr<ZXing::LuminanceSource>)source;
-		// 	auto bm = self.newInstance(ls);
-		// 	return bm;
-		// });
 
 
 	// MultiFormatReader class
