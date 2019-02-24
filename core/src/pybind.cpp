@@ -190,17 +190,23 @@ PYBIND11_MODULE(ZXingCore, m) {
 		});
 
 
-	// BarcodeFormat
+	m.def("BarcodeFormatToString", [](ZXing::BarcodeFormat format) {
+			return ZXing::ToString(format);
+		});
+
+
+	// BarcodeFormat class
 	py::class_<ZXing::BarcodeFormat>(m, "BarcodeFormat")
 		.def(py::init<>());
 
 
-	// ByteArray
+	// ByteArray class
 	py::class_<ZXing::ByteArray>(m, "ByteArray")
-		.def(py::init<>());
+		.def(py::init<>())
+		.def("length", &ZXing::ByteArray::length);
 
 
-	// DecodeHints
+	// DecodeHints class
 	py::class_<ZXing::DecodeHints>(m, "DecodeHints")
 		.def(py::init<>())
 		.def("setShouldTryHarder", &ZXing::DecodeHints::setShouldTryHarder)
@@ -212,20 +218,35 @@ PYBIND11_MODULE(ZXingCore, m) {
 		});
 
 
-	// GenericLuminanceSource
+	// GenericLuminanceSource class
 	py::class_<ZXing::GenericLuminanceSource, std::shared_ptr<ZXing::GenericLuminanceSource>>(m, "GenericLuminanceSource")
+		.def(py::init<int, int, char*, int>())
 		.def(py::init<int, int, const void*, int, int, int, int, int>())
-		.def(py::init<int, int, char*, int>());
-		// .def("rotated", &ZXing::GenericLuminanceSource::rotated)
-		// .def("cropped", &ZXing::GenericLuminanceSource::cropped);
+		.def(py::init<int, int, int, int, const void*, int, int, int, int, int>())
+		.def(py::init<int, int, int, int, const void*, int>())
+		.def("canCrop", &ZXing::GenericLuminanceSource::canCrop)
+		.def("canRotate", &ZXing::GenericLuminanceSource::canRotate)
+		.def("cropped", &ZXing::GenericLuminanceSource::cropped)
+		.def("rotated", &ZXing::GenericLuminanceSource::rotated)
+		.def("getRow", &ZXing::GenericLuminanceSource::getRow)
+		.def("getMatrix", &ZXing::GenericLuminanceSource::getMatrix)
+		.def("height", &ZXing::GenericLuminanceSource::height)
+		.def("width", &ZXing::GenericLuminanceSource::width);
 
 
-	// GlobalHistogramBinarizer
+	// GlobalHistogramBinarizer class
 	py::class_<ZXing::GlobalHistogramBinarizer, std::shared_ptr<ZXing::GlobalHistogramBinarizer>>(m, "GlobalHistogramBinarizer")
-		.def(py::init<std::shared_ptr<const ZXing::LuminanceSource>, bool>());
+		.def(py::init<std::shared_ptr<const ZXing::LuminanceSource>, bool>())
+		.def("canCrop", &ZXing::GlobalHistogramBinarizer::canCrop)
+		.def("canRotate", &ZXing::GlobalHistogramBinarizer::canRotate)
+		.def("getBlackRow", &ZXing::GlobalHistogramBinarizer::getBlackRow)
+		.def("isPureBarcode", &ZXing::GlobalHistogramBinarizer::isPureBarcode)
+		.def("newInstance", &ZXing::GlobalHistogramBinarizer::newInstance)
+		.def("height", &ZXing::GlobalHistogramBinarizer::height)
+		.def("width", &ZXing::GlobalHistogramBinarizer::width);
 
 
-	// HybridBinarizer
+	// HybridBinarizer class
 	py::class_<ZXing::HybridBinarizer, std::shared_ptr<ZXing::HybridBinarizer>>(m, "HybridBinarizer")
 		.def(py::init<std::shared_ptr<ZXing::LuminanceSource>>())
 		.def(py::init<std::shared_ptr<ZXing::LuminanceSource>, bool>())
@@ -239,7 +260,7 @@ PYBIND11_MODULE(ZXingCore, m) {
 		// });
 
 
-	// MultiFormatReader
+	// MultiFormatReader class
 	py::class_<ZXing::MultiFormatReader>(m, "MultiFormatReader")
 		.def(py::init<ZXing::DecodeHints>())
 		// .def("read", &ZXing::MultiFormatReader::read);
@@ -248,7 +269,7 @@ PYBIND11_MODULE(ZXingCore, m) {
 		});
 
 
-	// Result
+	// Result class
 	py::class_<ZXing::Result>(m, "Result")
 		.def(py::init<ZXing::Result>())
 		.def("metadata", [](ZXing::Result &self) {
@@ -266,7 +287,7 @@ PYBIND11_MODULE(ZXingCore, m) {
 		.def("text", &ZXing::Result::text);
 
 
-	// TextUtfEncoding
+	// TextUtfEncoding class
 	py::class_<ZXing::TextUtfEncoding>(m, "TextUtfEncoding")
 		.def_static("AppendUtf16", &ZXing::TextUtfEncoding::AppendUtf16)
 		.def_static("AppendUtf8", &ZXing::TextUtfEncoding::AppendUtf8)
