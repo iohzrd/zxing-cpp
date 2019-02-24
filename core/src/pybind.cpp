@@ -195,6 +195,11 @@ PYBIND11_MODULE(ZXingCore, m) {
 		.def(py::init<>());
 
 
+	// ByteArray
+	py::class_<ZXing::ByteArray>(m, "ByteArray")
+		.def(py::init<>());
+
+
 	// DecodeHints
 	py::class_<ZXing::DecodeHints>(m, "DecodeHints")
 		.def(py::init<>())
@@ -239,8 +244,7 @@ PYBIND11_MODULE(ZXingCore, m) {
 		.def(py::init<ZXing::DecodeHints>())
 		// .def("read", &ZXing::MultiFormatReader::read);
 		.def("read", [](ZXing::MultiFormatReader &self, ZXing::HybridBinarizer &hb) {
-			ZXing::Result ret = self.read(hb);
-			return ZXing::TextUtfEncoding::ToUtf8(ret.text());
+			return ZXing::Result (self.read(hb));
 		});
 
 
