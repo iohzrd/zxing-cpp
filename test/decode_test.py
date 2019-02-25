@@ -1,4 +1,6 @@
 import os
+import traceback
+import inspect
 import unittest
 from PIL import Image
 from ZXingCore import (
@@ -20,33 +22,44 @@ hints.setShouldTryRotate(True)
 reader = MultiFormatReader(hints)
 
 
-class MainTest(unittest.TestCase):
+def create_test_fn(caseImgPath, caseTxtValue):
+    def do_test_expected(self):
+        im = Image.open(caseImgPath).convert("L")
+        width, height = im.size
+        im = im.tobytes()
+        source = GenericLuminanceSource(width, height, im, width)
+        binarizer = HybridBinarizer(source)
+        result = reader.read(binarizer)
+        self.assertEqual(result.text(), caseTxtValue)
+
+    return do_test_expected
+
+
+class TestSequence(unittest.TestCase):
+    maxDiff = None
     pass
-
-
-def fn(caseImagePath):
-    im = Image.open(caseImagePath).convert("L")
-    width, height = im.size
-    im = im.tobytes()
-    source = GenericLuminanceSource(width, height, im, width)
-    binarizer = HybridBinarizer(source)
-    result = reader.read(binarizer)
-    return result.text()
 
 
 for fol in os.listdir("./blackbox/"):
     if os.path.isdir("./blackbox/{}".format(fol)):
         for fil in os.listdir("./blackbox/{}".format(fol)):
             if fil.endswith(".txt"):
-                case = fil.split(".")[0]
-                caseTxt = open("./blackbox/{}/{}".format(fol, fil), "r")
-                caseValue = caseTxt.readline()
-                caseTxt.close()
-            if fil.endswith(".png"):
-                caseImagePath = "./blackbox/{}/{}".format(fol, fil)
-                testmethodname = "test_fn_{0}".format(fil)
-                testmethod = lambda self: self.assertEqual(fn(caseImagePath), caseValue)
-                setattr(MainTest, testmethodname, testmethod)
+                caseTxtPath = os.path.abspath("./blackbox/{}/{}".format(fol, fil))
+                caseImgPath = os.path.abspath(caseTxtPath.replace(".txt", ".png"))
+                if os.path.exists(caseTxtPath) and os.path.exists(caseImgPath):
+                    caseTxtFile = open(caseTxtPath, "r")
+                    caseTxtValue = caseTxtFile.read().replace(
+                        "\n", "\r\n"
+                    )  # text file must have been created on windows...
+                    caseTxtFile.close()
+                    testmethodname = (
+                        "test_fn_{}_{}".format(fol, fil)
+                        .replace(".txt", "")
+                        .replace("-", "_")
+                    )
+                    testmethod = create_test_fn(caseImgPath, caseTxtValue)
+                    setattr(TestSequence, testmethodname, testmethod)
+
 
 if __name__ == "__main__":
     unittest.main()
