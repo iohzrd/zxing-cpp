@@ -22,4 +22,4 @@ endif
 
 include $(BUILD_SHARED_LIBRARY)
 
-include $(LOCAL_PATH)/../../../core/Android.mk
+include $(LOCAL_PATH)/../../../Android.mk

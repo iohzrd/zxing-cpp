@@ -11,7 +11,7 @@ This project is a C++ port of [ZXing Library](https://github.com/zxing/zxing).
 * Wrapper to create WinRT component
 * Wrapper for Android
 * Wrapper for WebAssembly
-* Wrapper for Python via pybind11
+* Wrapper for Python via pybind11 (requires pybind11... sudo apt install pybind11-dev)
 
 ## Supported Formats
 
@@ -41,7 +41,7 @@ PM> Install-Package huycn.zxingcpp.winrt
 
 ## Getting Started
 The wrappers export very simple API to use, check `BarcodeReader` and `BarcodeGenerator` in each wrapper.
-For more fine-grain control in scanning process, check [`MultiFormatReader`](core/src/MultiFormatReader.h) class. For more customization when generating particular barcode format, you need to instantiate appropriate writer, see [`MultiFormatWriter`](core/src/MultiFormatWriter.h) for more details.
+For more fine-grain control in scanning process, check [`MultiFormatReader`](src/MultiFormatReader.h) class. For more customization when generating particular barcode format, you need to instantiate appropriate writer, see [`MultiFormatWriter`](src/MultiFormatWriter.h) for more details.
 
 
 ## Build Instructions
@@ -88,12 +88,12 @@ By default, both encoder and decoder are included. If you don't plan to use eith
 Wrappers are provided as convenient way to work with native image format. You still can use the library without a wrapper.
 
 ##### To read barcodes:
-1. Create a [`LuminanceSource`](core/src/LuminanceSource.h) instance. This interface abstracts an image source. You will need a third-party library to read your images. If you already have an image uncompressed in memory and you know its layout, you can easily go with [`GenericLuminanceSource`](core/src/GenericLuminanceSource.h). Otherwise, you will need to come up with your own implementation of the interface.
-2. Use the `LuminanceSource` instance above to create an instance of [`BinaryBitmap`](core/src/BinaryBitmap.h). You have choices between [`HybridBinarizer`](core/src/HybridBinarizer.h) or [`GlobalHistogramBinarizer`](core/src/GlobalHistogramBinarizer.h). See class document in header files for more details on theses choices.
-3. Create an instance of [`MultiFormatReader`](core/src/MultiFormatReader.h) with appropriate hints. Pay attention to `possibleFormats()`, `shouldTryHarder()`, `shouldTryRotate()`. These parameters will affect accuracy as well as reader's speed.
+1. Create a [`LuminanceSource`](src/LuminanceSource.h) instance. This interface abstracts an image source. You will need a third-party library to read your images. If you already have an image uncompressed in memory and you know its layout, you can easily go with [`GenericLuminanceSource`](src/GenericLuminanceSource.h). Otherwise, you will need to come up with your own implementation of the interface.
+2. Use the `LuminanceSource` instance above to create an instance of [`BinaryBitmap`](src/BinaryBitmap.h). You have choices between [`HybridBinarizer`](src/HybridBinarizer.h) or [`GlobalHistogramBinarizer`](src/GlobalHistogramBinarizer.h). See class document in header files for more details on theses choices.
+3. Create an instance of [`MultiFormatReader`](src/MultiFormatReader.h) with appropriate hints. Pay attention to `possibleFormats()`, `shouldTryHarder()`, `shouldTryRotate()`. These parameters will affect accuracy as well as reader's speed.
 4. Call `MultiFormatReader::read()` with the `BinaryImage` created above to read your barcodes.
 
 ##### To write barcodes:
-1. Create a [`MultiFormatWriter`](core/src/MultiFormatWriter.h) instance with the format you want to generate. Set encoding and margins if needed.
-2. Call `encode()` with text content and the image size. This returns an [`BitMatrix`](core/src/BitMatrix.h) which kind of binary image of the barcode where `true` == visual black and `false` == visual white.
+1. Create a [`MultiFormatWriter`](src/MultiFormatWriter.h) instance with the format you want to generate. Set encoding and margins if needed.
+2. Call `encode()` with text content and the image size. This returns an [`BitMatrix`](src/BitMatrix.h) which kind of binary image of the barcode where `true` == visual black and `false` == visual white.
 3. Convert the bit matrix to your native image format.
