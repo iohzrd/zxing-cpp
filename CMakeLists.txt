@@ -442,6 +442,8 @@ if (ENABLE_ENCODERS)
     )
 endif()
 
+set (TEST_DIR "test")
+
 source_group (Sources FILES ${COMMON_FILES})
 source_group (Sources\\aztec FILES ${AZTEC_FILES})
 source_group (Sources\\datamatrix FILES ${DATAMATRIX_FILES})
@@ -511,7 +513,7 @@ target_link_libraries (ZXingCore PUBLIC ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRA
 add_library(ZXing::Core ALIAS ZXingCore)
 set_target_properties(ZXingCore PROPERTIES EXPORT_NAME Core)
 
-set(CMAKECONFIG_INSTALL_DIR "lib/cmake/ZXing")
+set (CMAKECONFIG_INSTALL_DIR "lib/cmake/ZXing")
 install(TARGETS ZXingCore EXPORT ZXingTargets
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin

@@ -1,3 +1,6 @@
-build/
-.vscode/
+*.egg
+*.egg-info
 *.so
+.vscode/
+build/
+dist/
