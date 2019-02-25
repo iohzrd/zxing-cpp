@@ -26,6 +26,11 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     
 endif()
 
+
+if (NOT DEFINED ENABLE_PYBIND)
+    set (ENABLE_PYBIND OFF)
+endif()
+
 if (NOT DEFINED ENABLE_ENCODERS)
     set (ENABLE_ENCODERS OFF)
 endif()
@@ -81,6 +86,8 @@ set (COMMON_FILES
     src/ZXContainerAlgorithms.h
     src/ZXStrConvWorkaround.h
     src/ZXTestSupport.h
+)
+set (PYBIND_FILES
     src/pybind.cpp
 )
 if (ENABLE_DECODERS)
@@ -450,17 +457,32 @@ find_package(PythonLibs REQUIRED)
 find_package(pybind11 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-pybind11_add_module(ZXingCore SHARED
-    ${COMMON_FILES}
-    ${AZTEC_FILES}
-    ${DATAMATRIX_FILES}
-    ${MAXICODE_FILES}
-    ${ONED_FILES}
-    ${ONED_RSS_FILES}
-    ${PDF417_FILES}
-    ${QRCODE_FILES}
-    ${TEXT_CODEC_FILES}
-)
+if (ENABLE_PYBIND)
+    pybind11_add_module(ZXingCore SHARED
+        ${COMMON_FILES}
+        ${PYBIND_FILES}
+        ${AZTEC_FILES}
+        ${DATAMATRIX_FILES}
+        ${MAXICODE_FILES}
+        ${ONED_FILES}
+        ${ONED_RSS_FILES}
+        ${PDF417_FILES}
+        ${QRCODE_FILES}
+        ${TEXT_CODEC_FILES}
+    )
+else()
+    add_library (ZXingCore
+        ${COMMON_FILES}
+        ${AZTEC_FILES}
+        ${DATAMATRIX_FILES}
+        ${MAXICODE_FILES}
+        ${ONED_FILES}
+        ${ONED_RSS_FILES}
+        ${PDF417_FILES}
+        ${QRCODE_FILES}
+        ${TEXT_CODEC_FILES}
+    )
+endif()
 
 target_include_directories (ZXingCore
     PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"

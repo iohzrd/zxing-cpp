@@ -1,6 +1,4 @@
 import os
-import traceback
-import inspect
 import unittest
 from PIL import Image
 from ZXingCore import (
@@ -37,7 +35,6 @@ def create_test_fn(caseImgPath, caseTxtValue):
 
 class TestSequence(unittest.TestCase):
     maxDiff = None
-    pass
 
 
 for fol in os.listdir("./blackbox/"):
@@ -48,9 +45,7 @@ for fol in os.listdir("./blackbox/"):
                 caseImgPath = os.path.abspath(caseTxtPath.replace(".txt", ".png"))
                 if os.path.exists(caseTxtPath) and os.path.exists(caseImgPath):
                     caseTxtFile = open(caseTxtPath, "r")
-                    caseTxtValue = caseTxtFile.read().replace(
-                        "\n", "\r\n"
-                    )  # text file must have been created on windows...
+                    caseTxtValue = caseTxtFile.read()
                     caseTxtFile.close()
                     testmethodname = (
                         "test_fn_{}_{}".format(fol, fil)
